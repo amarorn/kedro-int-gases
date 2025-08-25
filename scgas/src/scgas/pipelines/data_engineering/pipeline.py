@@ -1,8 +1,7 @@
 from kedro.pipeline import Pipeline, node
-from .nodes import authenticate_scgas, collect_measurements
+from scgas.pipelines.data_engineering.nodes import authenticate_scgas, collect_measurements, create_dataframe
 
 def create_pipeline(**kwargs) -> Pipeline:
-    """Cria o pipeline de engenharia de dados para API SCGAS."""
     
     return Pipeline(
         [
@@ -19,6 +18,13 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs="measurements_data",
                 name="collect_measurements_node",
                 tags=["data_collection", "api"],
+            ),
+            node(
+                func=create_dataframe,
+                inputs=["measurements_data"],
+                outputs="measurements_df",
+                name="create_dataframe_node",
+                tags=["data_processing", "pandas"],
             ),
         ]
     )

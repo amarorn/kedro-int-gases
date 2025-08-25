@@ -11,10 +11,18 @@ api_scgas:
       history_measurement: "/api/Variable/History/Measurement"
       variable_status: "/api/Variable/Status"
     
+    # Body padrão para consulta de medições
+    measurement_request_body:
+      idIntegracao: "VRTA-CLT-41-023-0001"
+      tagList: ["HistTotal"]
+      from: "2025-01-01T00:00:00.000-03:00"
+      to: "2025-08-07T00:00:00.000-03:00"
+      groupBy: "h"
+      calcBy: "val"
+    
     data_headers:
       "Content-Type": "application/json"
       "Accept": "*/*"
-      "Authorization": "Bearer {token}"
     
     auth_headers:
       "Content-Type": "application/json"
