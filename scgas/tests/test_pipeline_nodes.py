@@ -52,10 +52,9 @@ class TestPipelineNodes:
         
         # Executa a função
         result = authenticate_scgas(mock_api_config, mock_credentials)
-        
-        # Verifica resultado
-        assert result['access_token'] == 'test_token_123'
-        assert result['token_type'] == 'bearer'
+
+        # Verifica resultado - agora a função retorna apenas o token
+        assert result == 'test_token_123'
         
         # Verifica se a requisição foi feita corretamente
         mock_post.assert_called_once()

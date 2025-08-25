@@ -20,8 +20,9 @@ def authenticate_scgas(api_config: Dict[str, Any], credentials: Dict[str, Any]) 
     )
     
     if response.status_code == 200:
-        print(response.json())
-        return response.json()
+        token_json = response.json()
+        print(token_json)
+        return token_json["access_token"]
     else:
         raise Exception(f"Erro ao autenticar: {response.status_code} - {response.text}")
 
