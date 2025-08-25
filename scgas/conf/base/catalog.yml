@@ -1,0 +1,19 @@
+# Configuração da API SCGAS
+api_config:
+  type: yaml.YAMLDataSet
+  filepath: conf/base/api_config.yml
+
+# Credenciais (definidas em conf/local/credentials.yml)
+credentials:
+  type: yaml.YAMLDataSet
+  filepath: conf/local/credentials.yml
+
+# Token de autenticação (output do primeiro node)
+auth_token:
+  type: json.JSONDataSet
+  filepath: data/02_intermediate/auth_token.json
+
+# Dados de medição coletados (output do segundo node)
+measurements_data:
+  type: json.JSONDataSet
+  filepath: data/02_intermediate/measurements_data.json

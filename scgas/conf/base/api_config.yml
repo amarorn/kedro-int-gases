@@ -1,0 +1,37 @@
+api_scgas:
+  scgas:
+    base_url: "https://scada.scgas.com.br"
+    
+    authentication:
+      auth_url: "/api/Auth/Token"
+      username: "${scgas_api.username}"
+      password: "${scgas_api.password}"
+    
+    endpoints:
+      history_measurement: "/api/Variable/History/Measurement"
+      variable_status: "/api/Variable/Status"
+    
+    data_headers:
+      "Content-Type": "application/json"
+      "Accept": "*/*"
+      "Authorization": "Bearer {token}"
+    
+    auth_headers:
+      "Content-Type": "application/json"
+      "Accept": "*/*"
+    
+    timeout: 30
+    retry_attempts: 3
+    rate_limit_per_minute: 60
+    rate_limit_per_hour: 3600
+    backoff_factor: 2
+
+  data_processing:
+    batch_size: 1000
+    max_retries: 3
+    retry_delay_seconds: 5
+
+  logging:
+    log_api_calls: true
+    log_response_times: true
+    log_error_details: true

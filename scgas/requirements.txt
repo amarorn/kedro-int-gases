@@ -1,0 +1,19 @@
+# Core Kedro dependencies
+kedro[jupyter]~=1.0.0
+kedro-datasets[pandas-csvdataset, pandas-exceldataset, pandas-parquetdataset, spark-sparkdataset, plotly-plotlydataset, plotly-jsondataset, matplotlib-matplotlibwriter]>=3.0
+kedro-viz>=6.7.0
+
+# Big Data and Spark
+pyspark>=4.0.0
+
+# Jupyter and Development Environment
+ipython>=8.10
+jupyterlab>=3.0
+notebook
+
+# Machine Learning and Data Science
+scikit-learn~=1.5.1
+seaborn~=0.12.1
+
+# System dependencies
+setuptools; python_version >= "3.12"
