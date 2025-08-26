@@ -5,6 +5,15 @@ import json
 from datetime import datetime
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType, IntegerType, TimestampType
+import logging
+import re
+from pathlib import Path
+
+from kedro.io import AbstractDataSet
+from kedro_datasets.spark.spark_dataset import get_spark
+from pyspark.sql import DataFrame, SparkSession
+
+
 
 def authenticate_scgas(api_config: Dict[str, Any], credentials: Dict[str, Any]) -> str:
     """Autentica na API SCGAS e retorna o token de acesso."""
@@ -189,6 +198,22 @@ def process_with_spark(measurements_dataframe: pd.DataFrame) -> Dict[str, Any]:
             "message": f"Usado fallback pandas devido a erro no Spark: {str(e)}"
         }
 
+def get_dbutils(
+    spark: SparkSession,
+)-> Any | Any | None:
+    try:
+        from pyspark.dbutils import DBUtils
+        
+        if "dbutils" not in locals():
+            utils: Any = DBUtils(spark)
+            return utils
+        else:
+            return locals().get("dbutils")
+    except ImportError:
+        return None
+    
+def get_spark_session(app_name: str) -> SparkSession:
+    """Obtém uma SparkSession com o nome da aplicação."""
 def save_to_databricks_catalog(measurements_data: Dict[str, Any], api_config: Dict[str, Any], databricks_catalog_config: Dict[str, Any]) -> Dict[str, Any]:
     """
     Processa os dados JSON da API SCGAS e grava no catálogo shd_qas_internal_datalake.scgas_raw.
