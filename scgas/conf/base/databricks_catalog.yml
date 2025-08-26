@@ -1,0 +1,97 @@
+# Configuração do catálogo Databricks para o projeto SCGAS
+databricks_catalog:
+  # Nome do catálogo onde os dados serão salvos
+  catalog_name: "shd_qas_internal_datalake"
+  
+  # Nome da tabela para dados brutos do SCGAS
+  table_name: "scgas_raw"
+  
+  # Schema da tabela
+  schema:
+    - name: "codVar"
+      type: "string"
+      nullable: true
+      description: "Código da variável"
+    
+    - name: "tag"
+      type: "string"
+      nullable: true
+      description: "Tag de identificação"
+    
+    - name: "idIntegracao"
+      type: "string"
+      nullable: true
+      description: "ID de integração"
+    
+    - name: "unidade"
+      type: "string"
+      nullable: true
+      description: "Unidade de medida"
+    
+    - name: "descricao"
+      type: "string"
+      nullable: true
+      description: "Descrição da medição"
+    
+    - name: "data"
+      type: "timestamp"
+      nullable: true
+      description: "Data/hora da medição"
+    
+    - name: "valorConv"
+      type: "double"
+      nullable: true
+      description: "Valor convertido"
+    
+    - name: "valorConvFormat"
+      type: "double"
+      nullable: true
+      description: "Valor formatado"
+    
+    - name: "estacao"
+      type: "string"
+      nullable: true
+      description: "Estação de medição"
+    
+    - name: "codEst"
+      type: "string"
+      nullable: true
+      description: "Código da estação"
+    
+    - name: "codMed"
+      type: "string"
+      nullable: true
+      description: "Código da medição"
+    
+    - name: "intervaloLeituraMin"
+      type: "integer"
+      nullable: true
+      description: "Intervalo de leitura em minutos"
+    
+    - name: "data_coleta"
+      type: "timestamp"
+      nullable: true
+      description: "Data/hora da coleta dos dados"
+    
+    - name: "processamento_timestamp"
+      type: "timestamp"
+      nullable: true
+      description: "Data/hora do processamento"
+  
+  # Configurações de escrita
+  write_options:
+    mode: "append"  # append, overwrite, error, ignore
+    merge_schema: true
+    partition_by: []  # Campos para particionamento (se necessário)
+  
+  # Configurações de performance
+  performance:
+    coalesce_partitions: true
+    adaptive_query_execution: true
+    dynamic_partition_pruning: true
+  
+  # Configurações de auditoria
+  audit:
+    enable_audit_log: true
+    track_data_lineage: true
+    version_data: true
