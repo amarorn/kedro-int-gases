@@ -18,6 +18,11 @@ databricks_cluster:
   type: yaml.YAMLDataset
   filepath: conf/local/databricks_cluster.yml
 
+# Configuração do catálogo Databricks
+databricks_catalog:
+  type: yaml.YAMLDataset
+  filepath: conf/base/databricks_catalog.yml
+
 # Token de autenticação (output do primeiro node)
 auth_token:
   type: json.JSONDataset
@@ -37,3 +42,8 @@ measurements_dataframe:
 measurements_spark_df:
   type: json.JSONDataset
   filepath: data/03_primary/measurements_spark_df.json
+
+# Resultado da gravação no catálogo Databricks (output do quinto node)
+catalog_save_result:
+  type: json.JSONDataset
+  filepath: data/03_primary/catalog_save_result.json
