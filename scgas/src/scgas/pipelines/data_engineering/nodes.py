@@ -3,6 +3,8 @@ from typing import Dict, Any
 import pandas as pd
 import json
 from datetime import datetime
+from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType, StructField, StringType, DoubleType, IntegerType, TimestampType
 
 def authenticate_scgas(api_config: Dict[str, Any], credentials: Dict[str, Any]) -> str:
     """Autentica na API SCGAS e retorna o token de acesso."""
@@ -114,3 +116,75 @@ def create_dataframe(measurements_data: Dict[str, Any]) -> pd.DataFrame:
         print(f"Valor máximo: {df['valorConv'].max():.2f}")
     
     return df
+
+def process_with_spark(measurements_dataframe: pd.DataFrame) -> Dict[str, Any]:
+    """Processa os dados usando Spark do Databricks."""
+    
+    print("🔄 Iniciando processamento com Spark do Databricks...")
+    
+    try:
+        # Obtém a SparkSession ativa (configurada pelo hook)
+        spark = SparkSession.builder.getOrCreate()
+        
+        print(f"✅ Conectado ao Spark: {spark.version}")
+        print(f"   Aplicação: {spark.conf.get('spark.app.name')}")
+        
+        # Converte DataFrame pandas para Spark
+        spark_df = spark.createDataFrame(measurements_dataframe)
+        
+        print(f"📊 DataFrame Spark criado: {spark_df.count()} linhas, {len(spark_df.columns)} colunas")
+        
+        # Registra como tabela temporária para consultas SQL
+        spark_df.createOrReplaceTempView("measurements_temp")
+        
+        # Exemplo de consulta SQL
+        print("\n🔍 Executando consulta SQL...")
+        result = spark.sql("""
+            SELECT 
+                estacao,
+                COUNT(*) as total_medicoes,
+                AVG(valorConv) as valor_medio,
+                MIN(valorConv) as valor_minimo,
+                MAX(valorConv) as valor_maximo
+            FROM measurements_temp 
+            WHERE valorConv IS NOT NULL
+            GROUP BY estacao
+            ORDER BY total_medicoes DESC
+        """)
+        
+        print("📈 Resultado da agregação por estação:")
+        result.show()
+        
+        # Converte resultado para formato serializável
+        result_data = result.toPandas().to_dict('records')
+        
+        # Retorna dados processados em formato serializável
+        return {
+            "status": "success",
+            "spark_version": spark.version,
+            "total_records": spark_df.count(),
+            "columns": list(spark_df.columns),
+            "aggregation_results": result_data,
+            "message": "Dados processados com sucesso usando Spark do Databricks"
+        }
+        
+    except Exception as e:
+        print(f"❌ Erro ao processar com Spark: {e}")
+        print("   Retornando dados pandas processados...")
+        
+        # Fallback: retorna dados pandas em formato serializável
+        return {
+            "status": "fallback",
+            "total_records": len(measurements_dataframe),
+            "columns": list(measurements_dataframe.columns),
+            "aggregation_results": [
+                {
+                    "estacao": measurements_dataframe['estacao'].iloc[0] if 'estacao' in measurements_dataframe.columns else "N/A",
+                    "total_medicoes": len(measurements_dataframe),
+                    "valor_medio": float(measurements_dataframe['valorConv'].mean()) if 'valorConv' in measurements_dataframe.columns else 0.0,
+                    "valor_minimo": float(measurements_dataframe['valorConv'].min()) if 'valorConv' in measurements_dataframe.columns else 0.0,
+                    "valor_maximo": float(measurements_dataframe['valorConv'].max()) if 'valorConv' in measurements_dataframe.columns else 0.0
+                }
+            ],
+            "message": f"Usado fallback pandas devido a erro no Spark: {str(e)}"
+        }

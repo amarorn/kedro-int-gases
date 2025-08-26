@@ -1,0 +1,25 @@
+# Configuração do Databricks para o projeto SCGAS
+databricks:
+  workspace:
+    host: "https://adb-3588048019585666.6.azuredatabricks.net"
+  
+  # Configurações do cluster
+  cluster:
+    # ID do cluster será configurado em conf/local/
+    cluster_id: "0824-051852-4pb5c5j4"
+    
+  # Configurações do Spark
+  spark:
+    # Configurações específicas do Databricks
+    spark.databricks.service.enabled: true
+    spark.databricks.service.port: 15001
+    spark.databricks.service.server.enabled: true
+    
+    # Configurações de performance
+    spark.sql.execution.arrow.pyspark.enabled: true
+    spark.sql.execution.arrow.pyspark.fallback.enabled: true
+    
+    # Configurações de memória
+    spark.driver.maxResultSize: 3g
+    spark.sql.adaptive.enabled: true
+    spark.sql.adaptive.coalescePartitions.enabled: true

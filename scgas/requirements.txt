@@ -6,8 +6,8 @@ kedro-viz>=6.7.0
 # HTTP requests for API calls
 requests>=2.31.0
 
-# Big Data and Spark (comentado temporariamente)
-# pyspark>=4.0.0
+# Databricks Connect for Spark (inclui PySpark compatível)
+databricks-connect>=16.0.0
 
 # Jupyter and Development Environment
 ipython>=8.10

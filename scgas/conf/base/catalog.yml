@@ -1,24 +1,39 @@
 # Configuração da API SCGAS
 api_config:
-  type: kedro_datasets.yaml.YAMLDataset
+  type: yaml.YAMLDataset
   filepath: conf/base/api_config.yml
 
 # Credenciais (definidas em conf/local/credentials.yml)
 credentials:
-  type: kedro_datasets.yaml.YAMLDataset
+  type: yaml.YAMLDataset
   filepath: conf/local/credentials.yml
+
+# Configuração do Databricks
+databricks:
+  type: yaml.YAMLDataset
+  filepath: conf/base/databricks.yml
+
+# Configuração do cluster Databricks (local)
+databricks_cluster:
+  type: yaml.YAMLDataset
+  filepath: conf/local/databricks_cluster.yml
 
 # Token de autenticação (output do primeiro node)
 auth_token:
-  type: kedro_datasets.json.JSONDataset
+  type: json.JSONDataset
   filepath: data/02_intermediate/auth_token.json
 
 # Dados de medição coletados (output do segundo node)
 measurements_data:
-  type: kedro_datasets.json.JSONDataset
+  type: json.JSONDataset
   filepath: data/02_intermediate/measurements_data.json
 
-# Dados processados com pandas (output do terceiro node)
-measurements_df:
-  type: kedro_datasets.pandas.CSVDataset
-  filepath: data/03_primary/measurements.csv
+# DataFrame processado (output do terceiro node)
+measurements_dataframe:
+  type: pandas.CSVDataset
+  filepath: data/03_primary/measurements_dataframe.csv
+
+# DataFrame Spark processado (output do quarto node)
+measurements_spark_df:
+  type: json.JSONDataset
+  filepath: data/03_primary/measurements_spark_df.json

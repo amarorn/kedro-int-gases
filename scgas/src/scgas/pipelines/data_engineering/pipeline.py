@@ -1,7 +1,8 @@
 from kedro.pipeline import Pipeline, node
-from scgas.pipelines.data_engineering.nodes import authenticate_scgas, collect_measurements, create_dataframe
+from .nodes import authenticate_scgas, collect_measurements, create_dataframe, process_with_spark
 
 def create_pipeline(**kwargs) -> Pipeline:
+    """Cria o pipeline de engenharia de dados para API SCGAS com Databricks."""
     
     return Pipeline(
         [
@@ -22,9 +23,16 @@ def create_pipeline(**kwargs) -> Pipeline:
             node(
                 func=create_dataframe,
                 inputs=["measurements_data"],
-                outputs="measurements_df",
+                outputs="measurements_dataframe",
                 name="create_dataframe_node",
                 tags=["data_processing", "pandas"],
+            ),
+            node(
+                func=process_with_spark,
+                inputs=["measurements_dataframe"],
+                outputs="measurements_spark_df",
+                name="process_with_spark_node",
+                tags=["data_processing", "spark", "databricks"],
             ),
         ]
     )
